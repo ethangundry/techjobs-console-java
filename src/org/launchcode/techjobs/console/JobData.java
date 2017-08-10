@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class JobData {
      * with "Enterprise Holdings, Inc".
      *
      * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param value Value of the field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -76,11 +77,14 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value)) {
                 jobs.add(row);
             }
         }
-
+        // returns error if search wasn't found
+        if (jobs.size() <= 0) {
+            System.out.println("Your search item was not found within the list");
+        }
         return jobs;
     }
 
@@ -123,6 +127,31 @@ public class JobData {
             System.out.println("Failed to load job data");
             e.printStackTrace();
         }
+    }
+
+
+    // returns a specific search that is entered by the user
+    public static ArrayList<HashMap<String,String>> findByValue (String searchTerm) {
+        // loads CSV file
+        loadData();
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        // loops through everything
+        for (HashMap<String, String> row : allJobs) {
+            // loops through each pair in the dictionary
+            for (String fields : row.values()) {
+                // if the search term is within the columns specified
+                if (fields.toLowerCase().contains(searchTerm)) {
+                    jobs.add(row);
+                }
+            }
+        }
+        // returns error if search wasn't found
+        if (jobs.size() <= 0){
+            System.out.println("Your search item was not found within the list");
+        }
+        // returns the item that was searched for
+        return jobs;
+
     }
 
 }
