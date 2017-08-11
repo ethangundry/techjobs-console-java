@@ -142,6 +142,7 @@ public class JobData {
                 // if the search term is within the columns specified
                 if (fields.toLowerCase().contains(searchTerm)) {
                     jobs.add(row);
+                    break;
                 }
             }
         }
